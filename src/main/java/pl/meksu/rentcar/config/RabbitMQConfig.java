@@ -14,11 +14,17 @@ import pl.meksu.rentcar.services.MessageConsumer;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String QUEUE_NAME = "messageQueue";
+    public static final String CONTACT_QUEUE = "contactQueue";
+    public static final String RESET_QUEUE = "resetQueue";
 
     @Bean
-    public Queue queue() {
-        return new Queue(QUEUE_NAME, false);
+    public Queue contactQueue() {
+        return new Queue(CONTACT_QUEUE, false, false, true);
+    }
+
+    @Bean
+    public Queue resetQueue() {
+        return new Queue(RESET_QUEUE, false, false, true);
     }
 
     @Bean
@@ -31,21 +37,5 @@ public class RabbitMQConfig {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(jsonMessageConverter());
         return rabbitTemplate;
-    }
-
-    @Bean
-    public SimpleMessageListenerContainer listenerContainer(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(QUEUE_NAME);
-        container.setMessageListener(listenerAdapter);
-        return container;
-    }
-
-    @Bean
-    public MessageListenerAdapter listenerAdapter(MessageConsumer messageConsumer, MessageConverter messageConverter) {
-        MessageListenerAdapter adapter = new MessageListenerAdapter(messageConsumer, "receiveMessage");
-        adapter.setMessageConverter(messageConverter);
-        return adapter;
     }
 }

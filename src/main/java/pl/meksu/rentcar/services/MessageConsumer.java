@@ -16,14 +16,23 @@ public class MessageConsumer {
     @Autowired
     private EmailService emailService;
 
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
+    @RabbitListener(queues = RabbitMQConfig.CONTACT_QUEUE)
     public void receiveMessage(BaseMessage baseMessage) {
         String type = baseMessage.getType();
 
         if ("contact".equals(type)) {
             Message message = (Message) baseMessage.getData();
             sendEmail(message);
-        } else if ("reset_code".equals(type)) {
+        } else {
+            System.out.println("Nieznany typ wiadomości: " + type);
+        }
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.RESET_QUEUE)
+    public void receiveResetCodeMessage(BaseMessage baseMessage) {
+        String type = baseMessage.getType();
+
+        if ("reset_code".equals(type)) {
             ResetPasswordMessage reset = (ResetPasswordMessage) baseMessage.getData();
             sendResetCodeEmail(reset.getEmail(), reset.getResetCode());
         } else {
@@ -36,17 +45,7 @@ public class MessageConsumer {
         String to = user.getMail();
         String subject = "RentCar contact form";
         String body = "We received your message:\n" + message.getContent() + "\nWe will answer as soon as possible.\nBest regards,\nRentCar Team";
-
         emailService.sendEmail(to, subject, body);
-
-        System.out.println("Email sent to: " + to);
-    }
-
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
-    public void receiveResetCodeMessage(String[] message) {
-        String email = message[0];  // Pierwszy element to e-mail
-        String resetCode = message[1];  // Drugi element to kod resetowania
-        sendResetCodeEmail(email, resetCode);
     }
 
     private void sendResetCodeEmail(String email, String resetCode) {
@@ -55,9 +54,6 @@ public class MessageConsumer {
                 "Jeśli to nie była Twoja prośba, zignoruj ten e-mail.\n" +
                 "Kod wygasa po 10 minutach.\n\n" +
                 "RentCar Team";
-
         emailService.sendEmail(email, subject, body);
-
-        System.out.println("Reset code sent to: " + email);
     }
 }

@@ -38,7 +38,7 @@ public class MessageService {
         baseMessage.setType("contact");
         baseMessage.setData(savedMessage);
 
-        messageProducer.sendMessage(baseMessage);
+        messageProducer.sendContactMessage(baseMessage);
 
         return savedMessage;
     }

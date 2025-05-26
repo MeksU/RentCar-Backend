@@ -12,8 +12,11 @@ public class MessageProducer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public void sendMessage(BaseMessage baseMessage) {
+    public void sendContactMessage(BaseMessage baseMessage) {
+        rabbitTemplate.convertAndSend(RabbitMQConfig.CONTACT_QUEUE, baseMessage);
+    }
 
-        rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, baseMessage);
+    public void sendResetCodeMessage(BaseMessage resetCodeMessage) {
+        rabbitTemplate.convertAndSend(RabbitMQConfig.RESET_QUEUE, resetCodeMessage);
     }
 }

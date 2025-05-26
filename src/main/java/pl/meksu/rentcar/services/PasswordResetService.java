@@ -47,7 +47,7 @@ public class PasswordResetService {
         ResetPasswordMessage resetMessage = new ResetPasswordMessage(user.getMail(), resetCode);
         baseMessage.setData(resetMessage);
 
-        messageProducer.sendMessage(baseMessage);
+        messageProducer.sendResetCodeMessage(baseMessage);
     }
 
     public boolean verifyResetCode(String email, String resetCode) {
