@@ -1,6 +1,4 @@
-﻿# RentCar-Backend
-
-# RentCar Backend API 🚗
+﻿# RentCar Backend
 
 This is the backend for the **RentCar Android application**, built with **Java Spring Boot**.  
 It provides a fully functional REST API for managing car rentals, including user authentication, car listings, reservations, and payments.  
@@ -26,3 +24,4 @@ The backend communicates with the mobile app and the PostgreSQL database to prov
 - **Payments:** Process payments for rentals.  
 - **Messaging:** Contact the rental company via the app.  
 - **Token-based Session Management:** Ensures secure and stateless API sessions.  
+
